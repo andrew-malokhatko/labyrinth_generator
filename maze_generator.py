@@ -14,7 +14,7 @@ x_offset = 450
 
 timer = pygame.time.Clock()
 SIZE = 29
-speed = 15
+speed = 50
 SCREENSIZE = Position(1600, 900)
 
 screen = pygame.display.set_mode(SCREENSIZE)
@@ -51,7 +51,7 @@ class Field:
         for i in range(SIZE):
             row = []
             for k in range(SIZE):
-                tile = Tile(i * size + x_offset, k  * size + y_offset, size)##################################################################
+                tile = Tile(i * size + x_offset, k  * size + y_offset, size)
                 row.append(tile)
             self.tiles.append(row)
 
@@ -75,7 +75,7 @@ class Field:
             sides = []
 
             def check_in_range(ind_x, ind_y):
-                if in_range(ind_x, ind_y) and not self.tiles[ind_x][ind_y].generated: # replace tile with givven one
+                if in_range(ind_x, ind_y) and not self.tiles[ind_x][ind_y].generated:
                     sides.append(self.tiles[ind_x][ind_y])
 
             def get_index(pos_x, pos_y):
@@ -115,7 +115,7 @@ class Field:
                 move(moves[random_ind])
                 
             else:
-                ind = get_move_index(tile) # here must be smth that will return to previous move
+                ind = get_move_index(tile)
                 move(all_moves[ind - 1])
 
             
@@ -133,11 +133,11 @@ class Field:
 
         def clear_walls(tile: Tile, moving_to: Tile):
             
-            if moving_to.x > tile.x: #####
+            if moving_to.x > tile.x:
                 tile.right = False
                 moving_to.left = False
 
-            if moving_to.x < tile.x: ###
+            if moving_to.x < tile.x:
                 tile.left = False
                 moving_to.right = False
 
@@ -178,23 +178,19 @@ class Bot:
         self.image = pygame.Surface((100 - SIZE * 3, 100 - SIZE * 3))
         self.image.fill((100, 100, 100))       
         self.pos = Position(0, SIZE - 1)
-        #self.move()
 
     def update(self, screen):
         x_pos = x_offset + self.pos.x * self.tiles[0][0].size + self.tiles[0][0].size / 2
         y_pos = y_offset + self.pos.y * self.tiles[0][0].size + self.tiles[0][0].size / 2
-        #print(x_pos, y_pos)
         self.rect = self.image.get_rect(center=(x_pos, y_pos))
 
     def move(self):
         while self.pos != Position(SIZE - 1, 0):
             self.check_all()
-            #print(self.pos)
 
     def check_and_move(self, pos_x, pos_y, dir: Direction):
         if self.in_range(pos_x, pos_y):
             if not self.check_wall(pos_x, pos_y, dir) and not self.tiles[pos_x][pos_y].visited >= 2:
-                #print("new position is ", pos_x, pos_y)
                 self.direction = dir
                 self.pos = Position(pos_x, pos_y)
                 return True
@@ -285,13 +281,9 @@ def size_slider_work(slider_list):
 
     size = (SCREENSIZE.y - y_offset*2) / SIZE
     for i, k in product(range(SIZE), range(SIZE)):
-        print(i * size + x_offset)
         field.tiles[i][k].x = i * size + x_offset
         field.tiles[i][k].y = k  * size + y_offset
         field.tiles[i][k].size = size
-    #print("at slider", 100 - SIZE * 3.29)
-    #bot.image = pygame.Surface((20, 20))#((100 - SIZE * 3.29 , 100 - SIZE * 3.29))
-    #bot.image.fill((100, 100, 100))
     field.generate()
 
 def speed_slider_work(slider_list):

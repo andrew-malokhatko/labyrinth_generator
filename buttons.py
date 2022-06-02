@@ -49,7 +49,6 @@ class Slider(Block):
         self.min_value = min_value
         self.max_value = max_value
         self.value_per_pixel = (self.max_x - self.min_x) / (self.max_value - self.min_value)
-        print(self.value_per_pixel)
         self.slider_color = slider_color
         self.slider_surf = pygame.Surface((self.sliderw, self.sliderh))
         self.slider_surf.fill(slider_color)
@@ -84,46 +83,3 @@ class Slider(Block):
     def draw(self):
         self.surface.blit(self.image, self.rect)
         self.surface.blit(self.slider_surf, self.slider_rect)
-
-
-"""
-
-
-def dinma():
-    print("body builder dima!!!")
-
-lbl_group = pygame.sprite.Group()
-btns_group = pygame.sprite.Group()
-lbl_group.add(Label(100, 100, 300, 100, (100, 10, 100), (0, 100, 10), "im amongus", screen))
-btn = Button(100, 400, 100, 100, (255,0,0), (0,255,0), "i am...", screen, dinma)
-s = Slider(100, 550, 300, 10, (100, 100, 100), screen, 20, 10, 2, 20, (0,240,100))
-btns_group.add(btn)
-
-game_on = True
-drag = False
-
-while game_on:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            game_on = False
-        
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            drag = True
-            btn.check_pressed()
-            l = []
-            thread = Thread(target = s.drag(), args=(l))
-            print(l)
-
-
-        if event.type == pygame.MOUSEBUTTONUP:
-            drag = False
-
-    screen.fill((255,255,255))
-    btns_group.draw(screen)
-    btns_group.update(None)
-    s.update()
-    lbl_group.draw(screen)
-    lbl_group.update(None)
-    pygame.display.flip()
-    """
