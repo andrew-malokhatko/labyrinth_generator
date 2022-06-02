@@ -14,6 +14,7 @@ x_offset = 450
 
 timer = pygame.time.Clock()
 SIZE = 29
+speed = 15
 SCREENSIZE = Position(1600, 900)
 
 screen = pygame.display.set_mode(SCREENSIZE)
@@ -277,20 +278,25 @@ def stop_solve():
     solving = False
     bot.pos = Position(0, SIZE - 1)
 
-def slider_work(slider_list):
+def size_slider_work(slider_list):
     global SIZE
     SIZE = int(slider_list[0])
+    stop_solve()
 
     size = (SCREENSIZE.y - y_offset*2) / SIZE
     for i, k in product(range(SIZE), range(SIZE)):
+        print(i * size + x_offset)
         field.tiles[i][k].x = i * size + x_offset
         field.tiles[i][k].y = k  * size + y_offset
         field.tiles[i][k].size = size
-    print("at slider", 100 - SIZE * 3.29)
-    bot.image = pygame.Surface((100 - SIZE * 3.29 , 100 - SIZE * 3.29))
-    bot.image.fill((100, 100, 100))
-
+    #print("at slider", 100 - SIZE * 3.29)
+    #bot.image = pygame.Surface((20, 20))#((100 - SIZE * 3.29 , 100 - SIZE * 3.29))
+    #bot.image.fill((100, 100, 100))
     field.generate()
+
+def speed_slider_work(slider_list):
+    global speed
+    speed = slider_list[0]
 
 field = Field()
 field.generate()
@@ -309,10 +315,12 @@ solve_button = mButton(1400, 200, 150, 50, (100, 100, 100), (255, 255, 255), "So
 stop_button = mButton(1400, 300, 150, 50, (100, 100, 100), (255, 255, 255), "Stop", screen, stop_solve)
 size_slider = Slider(1300, 400, 250, 10, (100, 100, 100), screen, 40, 20, 2, 30, ((20, 20, 20)))
 size_label = Label(1390, 450, 200, 50, (255, 255, 255), (50, 50, 50), "Size", screen)
+speed_slider = Slider(1300, 550, 250, 10, (100, 100, 100), screen, 40, 20, 2, 100, ((20, 20, 20)))
+speed_label = Label(1390, 600, 200, 50, (255, 255, 255), (50, 50, 50), "Speed", screen)
 
 btns.add(generate_button, solve_button, stop_button)
-sliders.add(size_slider)
-lbls.add(size_label)
+sliders.add(size_slider, speed_slider)
+lbls.add(size_label, speed_label)
 
 while game_on:
     for event in pygame.event.get():
@@ -320,10 +328,16 @@ while game_on:
             game_on = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            slider_list = []
-            size_slider.drag(slider_list)
-            if len(slider_list) > 0:
-                slider_work(slider_list)
+            sz_slider_list = []
+            sp_slider_list = []
+
+            size_slider.drag(sz_slider_list)
+            if len(sz_slider_list) > 0:
+                size_slider_work(sz_slider_list)
+
+            speed_slider.drag(sp_slider_list)
+            if len(sp_slider_list) > 0:
+                speed_slider_work(sp_slider_list)
 
         if event.type == pygame.MOUSEBUTTONUP:
             generate_button.check_pressed()
@@ -349,5 +363,5 @@ while game_on:
     bot.update(screen)
     screen.blit(bot.image, bot.rect)
     pygame.display.flip()
-    timer.tick(7)
+    timer.tick(speed)
 
